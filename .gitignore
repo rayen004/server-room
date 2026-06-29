@@ -1,0 +1,27 @@
+# Python
+.venv/
+.venv313/
+venv/
+__pycache__/
+*.pyc
+
+# Angular
+node_modules/
+**/node_modules/
+dist/
+
+# Logs
+*.log
+*.err
+
+# Environment
+.env
+
+# VS Code
+.vscode/
+
+# Angular cache
+.angular/
+*.tsbuildinfo
+angular-compiler.db
+angular-compiler.db-lock

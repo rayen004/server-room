@@ -1,0 +1,646 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R] /Count 6 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 2033 >>
+stream
+BT
+/F1 11 Tf
+50 790 Td
+15 TL
+(Server Room Monitoring Dashboard - Beginner Explanation) Tj
+T*
+() Tj
+T*
+(1. Big Picture) Tj
+T*
+(Your project is a full stack application with two parts:) Tj
+T*
+(- Backend: Django + Django REST Framework) Tj
+T*
+(- Frontend: React + Recharts) Tj
+T*
+() Tj
+T*
+(The idea is simple:) Tj
+T*
+(A sensor reading is stored in Django, Django exposes it as JSON through an API, and) Tj
+T*
+(React reads that JSON to draw charts.) Tj
+T*
+() Tj
+T*
+(Flow:) Tj
+T*
+(Sensor -> Django Model -> Database -> DRF API -> React -> Recharts Chart) Tj
+T*
+() Tj
+T*
+(Think of it like a server room with a wall display:) Tj
+T*
+(- The sensor measures temperature and humidity.) Tj
+T*
+(- Django is the office worker that stores the readings.) Tj
+T*
+(- The database is the filing cabinet.) Tj
+T*
+(- The API is the translator that turns records into JSON.) Tj
+T*
+(- React is the dashboard screen.) Tj
+T*
+(- Recharts is the pen that draws the graphs.) Tj
+T*
+() Tj
+T*
+(2. Django Backend) Tj
+T*
+() Tj
+T*
+(models.py) Tj
+T*
+(Your SensorData model represents one reading from the server room.) Tj
+T*
+(It stores:) Tj
+T*
+(- temperature) Tj
+T*
+(- humidity) Tj
+T*
+(- created_at) Tj
+T*
+() Tj
+T*
+(Why this matters:) Tj
+T*
+(Each row in the database is one sensor snapshot. If the sensor sends a new value every) Tj
+T*
+(minute, Django can save one new SensorData row every minute.) Tj
+T*
+() Tj
+T*
+(Important fields:) Tj
+T*
+(- DecimalField is used for temperature and humidity because measurements often need) Tj
+T*
+(  decimals.) Tj
+T*
+(- created_at uses auto_now_add=True, which means Django stores the creation time) Tj
+T*
+(  automatically.) Tj
+T*
+(- db_index=True helps time-based sorting and searching become faster.) Tj
+T*
+() Tj
+T*
+(The Meta ordering = ["-created_at"] means the newest reading comes first by default.) Tj
+T*
+() Tj
+T*
+(serializers.py) Tj
+T*
+(The serializer converts Django model objects into JSON.) Tj
+T*
+() Tj
+T*
+(Why we use it:) Tj
+T*
+(Python objects cannot be sent directly to the browser in a useful way. React needs JSON,) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 1844 >>
+stream
+BT
+/F1 11 Tf
+50 790 Td
+15 TL
+(so the serializer acts like a translator.) Tj
+T*
+() Tj
+T*
+(Example idea:) Tj
+T*
+(SensorData object in Django -> JSON like:) Tj
+T*
+({) Tj
+T*
+(  "id": 1,) Tj
+T*
+(  "temperature": "24.50",) Tj
+T*
+(  "humidity": "52.00",) Tj
+T*
+(  "created_at": "2026-03-23T10:30:00Z") Tj
+T*
+(}) Tj
+T*
+() Tj
+T*
+(views.py) Tj
+T*
+(Your home view returns a simple JSON message for the root URL.) Tj
+T*
+() Tj
+T*
+(Your SensorDataViewSet uses DRF ModelViewSet.) Tj
+T*
+(That is a ready-made class that automatically gives common API actions like:) Tj
+T*
+(- list all sensor readings) Tj
+T*
+(- get one reading) Tj
+T*
+(- create a reading) Tj
+T*
+(- update a reading) Tj
+T*
+(- delete a reading) Tj
+T*
+() Tj
+T*
+(In your code:) Tj
+T*
+(- queryset = SensorData.objects.all\(\) means it reads all SensorData rows.) Tj
+T*
+(- serializer_class = SensorDataSerializer means it converts those rows using the) Tj
+T*
+(  serializer.) Tj
+T*
+() Tj
+T*
+(urls.py) Tj
+T*
+(At the app level, you use DefaultRouter.) Tj
+T*
+(That router automatically creates routes for the viewset.) Tj
+T*
+(Registering "sensor-data" creates routes such as:) Tj
+T*
+(- /sensor-data/) Tj
+T*
+(- /sensor-data/1/) Tj
+T*
+() Tj
+T*
+(At the project level, you include monitoring.urls under /api/.) Tj
+T*
+(That means the final endpoint becomes:) Tj
+T*
+(- /api/sensor-data/) Tj
+T*
+() Tj
+T*
+(So routing works like this:) Tj
+T*
+(project urls.py -> /api/ -> monitoring.urls -> router -> SensorDataViewSet) Tj
+T*
+() Tj
+T*
+(3. Data Flow from Database to Frontend) Tj
+T*
+(The backend flow is:) Tj
+T*
+(1. A reading exists in the database.) Tj
+T*
+(2. Django loads it through the SensorData model.) Tj
+T*
+(3. SensorDataViewSet gets the queryset.) Tj
+T*
+(4. SensorDataSerializer turns it into JSON.) Tj
+T*
+(5. Django REST Framework sends it as an HTTP response.) Tj
+T*
+(6. React fetches that response.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 1750 >>
+stream
+BT
+/F1 11 Tf
+50 790 Td
+15 TL
+(7. Recharts draws the chart.) Tj
+T*
+() Tj
+T*
+(Short version:) Tj
+T*
+(Database -> Model -> Serializer -> API -> React -> Chart) Tj
+T*
+() Tj
+T*
+(4. React Frontend) Tj
+T*
+() Tj
+T*
+(Dashboard.jsx) Tj
+T*
+(This is the main page logic for your dashboard.) Tj
+T*
+(It prepares the chart data, calculates the latest values, and sends data to child) Tj
+T*
+(components like SensorChart.) Tj
+T*
+() Tj
+T*
+(Right now your dashboard is using mock data, not live backend data.) Tj
+T*
+(That is okay for testing because it lets the charts display even when the backend is not) Tj
+T*
+(connected.) Tj
+T*
+() Tj
+T*
+(Mock data) Tj
+T*
+(You created a const data = [...] array with 20 points.) Tj
+T*
+(Each point has:) Tj
+T*
+(- time) Tj
+T*
+(- temperature) Tj
+T*
+(- humidity) Tj
+T*
+() Tj
+T*
+(This array is used as the starting chart state.) Tj
+T*
+() Tj
+T*
+(useState) Tj
+T*
+(React useState stores values that can change over time.) Tj
+T*
+(In your dashboard:) Tj
+T*
+(- chartData stores the list of points shown in the charts.) Tj
+T*
+(- lastUpdated stores the timestamp of the latest update.) Tj
+T*
+() Tj
+T*
+(When state changes, React re-renders the component.) Tj
+T*
+() Tj
+T*
+(useEffect) Tj
+T*
+(React useEffect runs side effects such as timers or API calls.) Tj
+T*
+(In your current dashboard, useEffect starts a timer with setInterval.) Tj
+T*
+(Every 3 seconds it:) Tj
+T*
+(- builds a new mock sensor point) Tj
+T*
+(- adds it to the chart data) Tj
+T*
+(- removes the oldest point so the list stays at 20 items) Tj
+T*
+(- updates the lastUpdated time) Tj
+T*
+() Tj
+T*
+(That creates the feeling of live sensor updates.) Tj
+T*
+() Tj
+T*
+(How Recharts uses the data) Tj
+T*
+(SensorChart receives props like:) Tj
+T*
+(- data) Tj
+T*
+(- dataKey) Tj
+T*
+(- color) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 2129 >>
+stream
+BT
+/F1 11 Tf
+50 790 Td
+15 TL
+(- unit) Tj
+T*
+() Tj
+T*
+(Inside SensorChart:) Tj
+T*
+(- <LineChart data={data}> means use the array as the chart source.) Tj
+T*
+(- <XAxis dataKey="time" /> uses the time field for the horizontal axis.) Tj
+T*
+(- <Line dataKey="temperature" /> draws the temperature values.) Tj
+T*
+(- <Line dataKey="humidity" /> draws the humidity values.) Tj
+T*
+() Tj
+T*
+(This is why one array can power two charts.) Tj
+T*
+(Each object contains both temperature and humidity, and each chart reads a different) Tj
+T*
+(property.) Tj
+T*
+() Tj
+T*
+(How cards show values) Tj
+T*
+(The dashboard also takes the latest point:) Tj
+T*
+(- latestPoint.temperature) Tj
+T*
+(- latestPoint.humidity) Tj
+T*
+() Tj
+T*
+(Those are shown in the summary cards so the number cards and the charts are based on the) Tj
+T*
+(same source of truth.) Tj
+T*
+() Tj
+T*
+(5. How React Connects to Django) Tj
+T*
+(You also have a fetch helper in sensorApi.js.) Tj
+T*
+(Its job is to call:) Tj
+T*
+(- /api/sensor-data/) Tj
+T*
+() Tj
+T*
+(It uses fetch\(\) to send an HTTP request.) Tj
+T*
+(If the response is successful, it returns response.json\(\).) Tj
+T*
+(That JSON can then be stored in React state.) Tj
+T*
+() Tj
+T*
+(When /api/sensor-data/ is called, the full chain is:) Tj
+T*
+(Browser -> Django URL router -> DRF router -> SensorDataViewSet -> SensorData queryset) Tj
+T*
+(-> Serializer -> JSON response -> React fetch\(\) -> state update -> chart redraw) Tj
+T*
+() Tj
+T*
+(Important note about your current setup:) Tj
+T*
+(Right now the dashboard is in mock mode for testing, so it is not actively using) Tj
+T*
+(fetchSensorData.) Tj
+T*
+(The backend API is ready, but the current chart display is powered by local mock data.) Tj
+T*
+() Tj
+T*
+(6. Beginner Summary) Tj
+T*
+(If you want to imagine the whole project simply, think of this:) Tj
+T*
+(- The server room sensor measures the environment.) Tj
+T*
+(- Django stores each reading.) Tj
+T*
+(- DRF turns the reading into JSON.) Tj
+T*
+(- React asks for the JSON.) Tj
+T*
+(- Recharts turns the numbers into lines.) Tj
+T*
+() Tj
+T*
+(Text flow:) Tj
+T*
+(Sensor -> Django -> Database -> API -> React -> Chart) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Length 1893 >>
+stream
+BT
+/F1 11 Tf
+50 790 Td
+15 TL
+(7. Mistakes or Improvements) Tj
+T*
+(Here are the best improvements for your project:) Tj
+T*
+() Tj
+T*
+(- Separate mock mode and live API mode clearly.) Tj
+T*
+(  Right now the backend exists, but the dashboard uses mock data. A simple USE_MOCK_DATA) Tj
+T*
+(flag would help.) Tj
+T*
+() Tj
+T*
+(- Consider ReadOnlyModelViewSet instead of ModelViewSet.) Tj
+T*
+(  If the frontend only needs to read data, ReadOnlyModelViewSet is safer because it) Tj
+T*
+(avoids accidental create, update, or delete actions.) Tj
+T*
+() Tj
+T*
+(- Limit the queryset.) Tj
+T*
+(  Returning every row can become slow later. For charts, usually the latest 20, 50, or) Tj
+T*
+(100 records are enough.) Tj
+T*
+() Tj
+T*
+(- Add validation.) Tj
+T*
+(  Prevent impossible values such as humidity above 100 or temperature far outside your) Tj
+T*
+(expected range.) Tj
+T*
+() Tj
+T*
+(- Move mock data into a separate file.) Tj
+T*
+(  That keeps Dashboard.jsx cleaner and makes switching between test mode and live mode) Tj
+T*
+(easier.) Tj
+T*
+() Tj
+T*
+(- Use polling or WebSockets for real-time updates.) Tj
+T*
+(  Polling every few seconds is the easiest beginner option. WebSockets are a good next) Tj
+T*
+(step for true live dashboards.) Tj
+T*
+() Tj
+T*
+(- Add loading and error states when you reconnect the real backend.) Tj
+T*
+(  This makes the dashboard feel more reliable.) Tj
+T*
+() Tj
+T*
+(8. Architecture Diagram) Tj
+T*
+() Tj
+T*
+(Current frontend test mode:) Tj
+T*
+(Mock data -> useState -> SensorChart -> Recharts lines) Tj
+T*
+() Tj
+T*
+(Backend mode:) Tj
+T*
+(Sensor -> Django Model -> SQLite Database -> Serializer -> /api/sensor-data/ -> React) Tj
+T*
+(fetch -> useState -> Recharts charts) Tj
+T*
+() Tj
+T*
+(Full text diagram:) Tj
+T*
+() Tj
+T*
+([SENSOR DEVICE]) Tj
+T*
+(      |) Tj
+T*
+(      v) Tj
+T*
+([Django Model: SensorData]) Tj
+T*
+(      |) Tj
+T*
+(      v) Tj
+T*
+([SQLite Database]) Tj
+T*
+(      |) Tj
+ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 875 >>
+stream
+BT
+/F1 11 Tf
+50 790 Td
+15 TL
+(      v) Tj
+T*
+([DRF Serializer]) Tj
+T*
+(      |) Tj
+T*
+(      v) Tj
+T*
+([API Endpoint: /api/sensor-data/]) Tj
+T*
+(      |) Tj
+T*
+(      v) Tj
+T*
+([React Dashboard]) Tj
+T*
+(      |) Tj
+T*
+(      v) Tj
+T*
+([Recharts Temperature and Humidity Charts]) Tj
+T*
+() Tj
+T*
+(9. Final Takeaway) Tj
+T*
+(Your project already has a solid structure:) Tj
+T*
+(- Django stores and serves data.) Tj
+T*
+(- DRF exposes data cleanly as JSON.) Tj
+T*
+(- React manages screen state.) Tj
+T*
+(- Recharts visualizes the data.) Tj
+T*
+() Tj
+T*
+(The biggest thing to understand is that charts are only a visual layer.) Tj
+T*
+(The real work happens in the data flow:) Tj
+T*
+(Sensor reading -> database record -> API response -> React state -> chart line.) Tj
+T*
+() Tj
+T*
+(Once that idea is clear, the whole dashboard becomes much easier to understand and) Tj
+T*
+(extend.) Tj
+ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 14 0 R >>
+endobj
+xref
+0 16
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000154 00000 n 
+0000000224 00000 n 
+0000002309 00000 n 
+0000002435 00000 n 
+0000004331 00000 n 
+0000004457 00000 n 
+0000006259 00000 n 
+0000006385 00000 n 
+0000008567 00000 n 
+0000008695 00000 n 
+0000010641 00000 n 
+0000010769 00000 n 
+0000011696 00000 n 
+trailer
+<< /Size 16 /Root 1 0 R >>
+startxref
+11824
+%%EOF

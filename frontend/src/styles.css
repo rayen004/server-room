@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-app-stroke;
+  }
+
+  html,
+  body {
+    @apply min-h-screen bg-app-bg bg-mesh font-sans text-app-text antialiased;
+    font-family: "Manrope", sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  app-root {
+    @apply block min-h-screen;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-glow;
+  }
+}
